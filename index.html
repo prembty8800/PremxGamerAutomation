@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PremxGamer Automation Dashboard</title>
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -131,13 +136,14 @@
     const clipLen = document.getElementById('clip_len').value;
     const fps = document.getElementById('fps').value;
 
-    // Yahan apna GitHub Personal Access Token daalein
-    const token = "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"; 
+    // Yahan apna naya GitHub Personal Access Token daalein
+    const token = "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"; 
     const owner = "prembtby8800";
     const repo = "PremxGamerAutomation";
 
-    if (token === "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" || token === "") {
-      alert("Pehle script ke andar apna valid GitHub Personal Access Token enter karein!");
+    // Validation check
+    if (!token || token === "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" || token.trim() === "") {
+      alert("Pehle script ke andar apna valid GitHub Token daalein!");
       return;
     }
 
@@ -166,7 +172,6 @@
         })
       });
 
-      // GitHub dispatch API success hone par 204 No Content return karta hai
       if (response.ok || response.status === 204) {
         alert('Workflow successfully triggered! GitHub Actions par check karein.');
       } else {
