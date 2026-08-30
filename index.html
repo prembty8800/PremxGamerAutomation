@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PremxGamerAutomation - Auto Stream Video Editor</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-color: #c9d1d9;
+            --accent-color: #58a6ff;
+            --accent-hover: #1f6feb;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        }
+        h1 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #8b949e;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #8b949e;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+        .col {
+            flex: 1;
+        }
+        button {
+            width: 100%;
+            background-color: #238636;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #2ea043;
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>PremxGamerAutomation</h1>
+        <div class="subtitle">Auto Stream Video Editor Dashboard (HD Engine)</div>
+
+        <form action="https://github.com/aksltaabty/PremxGamerAutomation/actions" method="get" target="_blank">
+            <div class="form-group">
+                <label for="video_url">Direct API Link or Video URL</label>
+                <input type="text" id="video_url" name="video_url" placeholder="Paste YouTube or Direct Video Link..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="audio_url">Optional Audio/Video URL (Leave blank if not needed)</label>
+                <input type="text" id="audio_url" name="audio_url" placeholder="Optional background audio link...">
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="video_title">File Prefix Name</label>
+                        <input type="text" id="video_title" name="video_title" value="cod" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="game_name">Game List Text Name</label>
+                        <input type="text" id="game_name" name="game_name" value="newcod" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="ratio">Crop Ratio</label>
+                        <select id="ratio" name="ratio">
+                            <option value="0">0 = None</option>
+                            <option value="1">1 = 1:1 Square</option>
+                            <option value="2">2 = 4:5 Portrait</option>
+                            <option value="3" selected>3 = 9:16 Vertical (Reels)</option>
+                            <option value="4">4 = 3:4</option>
+                            <option value="5">5 = 4:3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="filter">Gaming Color Filter</label>
+                        <select id="filter" name="filter">
+                            <option value="0">0 = OFF</option>
+                            <option value="1">1 = BALANCED POP</option>
+                            <option value="2" selected>2 = PRO GAMING VIVID</option>
+                            <option value="3">3 = CYBER FPS BOOST</option>
+                            <option value="4">4 = NIGHT MAP ENHANCER</option>
+                            <option value="5">5 = CINEMATIC TEAL-ORANGE</option>
+                            <option value="6">6 = ULTRA SHARP HDR</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="clip_count">Kitne clips banane hain?</label>
+                        <input type="number" id="clip_count" name="clip_count" value="3" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="clip_len">Second per clip</label>
+                        <input type="number" id="clip_len" name="clip_len" value="15" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">🚀 Run Workflow on GitHub</button>
+        </form>
+
+        <div class="footer-note">Powered by PremxGamer Automation & FFmpeg Engine</div>
+    </div>
+
+</body>
+</html>
