@@ -1,22 +1,190 @@
 <!DOCTYPE html>
-<html>
-<head><title>Token Test</title></head>
-<body>
-    <input type="password" id="t" placeholder="Paste Token">
-    <button onclick="testToken()">Test Token</button>
-    <script>
-        async function testToken() {
-            const token = document.getElementById('t').value.trim();
-            const res = await fetch('https://api.github.com/user', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (res.ok) {
-                const data = await res.json();
-                alert('Token Valid! Logged in as: ' + data.login);
-            } else {
-                alert('Token Invalid / Bad Credentials!');
-            }
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PremxGamer Automation Dashboard</title>
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
         }
-    </script>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        h2 {
+            text-align: center;
+            color: #00ffcc;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background: #00ffcc;
+            color: #121212;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #00b38f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>PremxGamer Video Editor Hub</h2>
+    
+    <form id="workflowForm" onsubmit="triggerWorkflow(event)">
+        <label for="video_url">Video URL / API Link:</label>
+        <input type="text" id="video_url" required placeholder="Paste video link here">
+
+        <label for="video_title">Video Title Prefix:</label>
+        <input type="text" id="video_title" value="cod" required>
+
+        <label for="game_name">Game Name (for text file):</label>
+        <input type="text" id="game_name" value="newcod" required>
+
+        <label for="ratio">Crop Ratio:</label>
+        <select id="ratio">
+            <option value="0">0 = None</option>
+            <option value="1">1 = 1:1</option>
+            <option value="2">2 = 4:5</option>
+            <option value="3" selected>3 = 9:16 (Reels/Shorts)</option>
+            <option value="4">4 = 3:4</option>
+            <option value="5">5 = 4:3</option>
+        </select>
+
+        <label for="filter">Color Filter:</label>
+        <select id="filter">
+            <option value="0">0 = OFF</option>
+            <option value="1">1 = BALANCED POP</option>
+            <option value="2" selected>2 = PRO GAMING VIVID</option>
+            <option value="3">3 = CYBER FPS BOOST</option>
+            <option value="4">4 = NIGHT MAP ENHANCER</option>
+            <option value="5">5 = CINEMATIC TEAL-ORANGE</option>
+            <option value="6">6 = ULTRA SHARP HDR</option>
+        </select>
+
+        <label for="speed">Video Speed:</label>
+        <select id="speed">
+            <option value="1" selected>1 = Normal (1x)</option>
+            <option value="2">2 = 1.05x</option>
+            <option value="3">3 = 1.10x</option>
+            <option value="4">4 = 1.25x</option>
+            <option value="5">5 = 1.5x</option>
+            <option value="6">6 = Slow (0.8x)</option>
+        </select>
+
+        <label for="clip_count">Clip Count (Kitne clips banane hain?):</label>
+        <input type="number" id="clip_count" value="3" required>
+
+        <label for="clip_len">Clip Length (Seconds):</label>
+        <input type="number" id="clip_len" value="15" required>
+
+        <label for="fps">FPS:</label>
+        <select id="fps">
+            <option value="1">1 = 30 FPS</option>
+            <option value="2" selected>2 = 60 FPS</option>
+        </select>
+
+        <button type="submit">Run Workflow from Website</button>
+    </form>
+</div>
+
+<script>
+  async function triggerWorkflow(event) {
+    event.preventDefault();
+
+    const videoUrl = document.getElementById('video_url').value;
+    const videoTitle = document.getElementById('video_title').value;
+    const gameName = document.getElementById('game_name').value;
+    const ratio = document.getElementById('ratio').value;
+    const filter = document.getElementById('filter').value;
+    const speed = document.getElementById('speed').value;
+    const clipCount = document.getElementById('clip_count').value;
+    const clipLen = document.getElementById('clip_len').value;
+    const fps = document.getElementById('fps').value;
+
+    // Yahan apna naya GitHub Personal Access Token daalein
+    const token = "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"; 
+    const owner = "prembtby8800";
+    const repo = "PremxGamerAutomation";
+
+    // Validation check
+    if (!token || token === "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" || token.trim() === "") {
+      alert("Pehle script ke andar apna valid GitHub Token daalein!");
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/editor.yml/dispatches`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ref: 'main',
+          inputs: {
+            video_url: videoUrl,
+            audio_url: "",
+            video_title: videoTitle,
+            game_name: gameName,
+            ratio: ratio,
+            filter: filter,
+            speed: speed,
+            clip_count: clipCount,
+            clip_len: clipLen,
+            fps: fps
+          }
+        })
+      });
+
+      if (response.ok || response.status === 204) {
+        alert('Workflow successfully triggered! GitHub Actions par check karein.');
+      } else {
+        const errData = await response.json();
+        alert('Failed to trigger workflow: ' + (errData.message || 'Check console'));
+        console.error(errData);
+      }
+    } catch (error) {
+      alert('Error connecting to GitHub API. Check console.');
+      console.error(error);
+    }
+  }
+</script>
+
 </body>
 </html>
