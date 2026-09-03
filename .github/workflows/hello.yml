@@ -1,0 +1,22 @@
+name: Hello Test Workflow
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # Isse aap GitHub UI se manually bhi run kar sakte hain
+
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Hello Script
+        run: |
+          echo "Hello, GitHub Actions!"
+          echo "Current date and time: $(date)"
+          echo "Running on branch: $GITHUB_REF_NAME"
