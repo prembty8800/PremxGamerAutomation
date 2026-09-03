@@ -88,15 +88,21 @@
     <h2>PremxGamer Video Editor Hub</h2>
     
     <form id="workflowForm" onsubmit="triggerWorkflow(event)">
+        <label for="workflow_file">Select Workflow to Run:</label>
+        <select id="workflow_file">
+            <option value="editor.yml" selected>editor.yml (Main Editor)</option>
+            <option value="hello.yml">hello.yml (Test Workflow)</option>
+        </select>
+
         <label for="github_token">GitHub Personal Access Token:</label>
         <div class="token-lock-box">
             <input type="password" id="github_token" required placeholder="Apna token yahan daalein">
             <button type="button" onclick="toggleTokenLock()" id="lockBtn">Lock Token</button>
         </div>
-        <div class="info">Token ko permanent fix/save rakhne ke liye 'Lock Token' dabayein.</div>
+        <div class="info">Token ko permanent fix rakhne ke liye 'Lock Token' dabayein.</div>
 
         <label for="video_url">Video URL / API Link:</label>
-        <input type="text" id="video_url" required placeholder="Paste video link here">
+        <input type="text" id="video_url" value="https://example.com/test.mp4" required>
 
         <label for="video_title">Video Title Prefix:</label>
         <input type="text" id="video_title" value="cod" required>
@@ -184,7 +190,6 @@
         const isLocked = localStorage.getItem('prem_token_locked') === 'true';
 
         if (!isLocked) {
-            // Lock it
             localStorage.setItem('prem_gh_token', tokenVal);
             localStorage.setItem('prem_token_locked', 'true');
             tokenInput.disabled = true;
@@ -192,7 +197,6 @@
             lockBtn.style.background = '#ff4444';
             alert('Token permanently fix/lock ho gaya hai!');
         } else {
-            // Unlock it
             localStorage.setItem('prem_token_locked', 'false');
             tokenInput.disabled = false;
             lockBtn.textContent = 'Lock Token';
@@ -204,6 +208,7 @@
     async function triggerWorkflow(event) {
         event.preventDefault();
 
+        const workflowFile = document.getElementById('workflow_file').value;
         const tokenInput = document.getElementById('github_token');
         const token = tokenInput.value.trim();
         const videoUrl = document.getElementById('video_url').value;
@@ -227,7 +232,7 @@
         localStorage.setItem('prem_gh_token', token);
 
         try {
-            const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/editor.yml/dispatches`, {
+            const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowFile}/dispatches`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -252,7 +257,7 @@
             });
 
             if (response.ok || response.status === 204) {
-                alert('Workflow successfully triggered! GitHub Actions par check karein.');
+                alert(`Workflow (${workflowFile}) successfully triggered! GitHub Actions par check karein.`);
             } else {
                 const errData = await response.json();
                 alert('Failed: ' + (errData.message || 'Check console'));
