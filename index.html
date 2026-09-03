@@ -73,8 +73,8 @@
     
     <form id="workflowForm" onsubmit="triggerWorkflow(event)">
         <label for="github_token">GitHub Personal Access Token:</label>
-        <input type="password" id="github_token" required placeholder="Apna naya token yahan daalein">
-        <div class="info">Token ko browser localStorage me save kar liya jayega taaki baar-baar na daalna pade.</div>
+        <input type="password" id="github_token" required placeholder="Apna token yahan daalein">
+        <div class="info">Token ko browser localStorage me save kar liya jayega.</div>
 
         <label for="video_url">Video URL / API Link:</label>
         <input type="text" id="video_url" required placeholder="Paste video link here">
@@ -133,7 +133,6 @@
 </div>
 
 <script>
-    // Page load hone par agar token pehle se saved hai toh input me bhar do
     window.addEventListener('DOMContentLoaded', () => {
         const savedToken = localStorage.getItem('prem_gh_token');
         if (savedToken) {
@@ -163,7 +162,6 @@
             return;
         }
 
-        // Token ko browser me save kar lo taaki baar-baar na likhna pade
         localStorage.setItem('prem_gh_token', token);
 
         try {
@@ -198,6 +196,9 @@
                 alert('Failed: ' + (errData.message || 'Check console'));
                 console.error(errData);
             }
+        } else {
+            // caught exception handle
+        }
         } catch (error) {
             alert('Error connecting to GitHub API. Check console.');
             console.error(error);
