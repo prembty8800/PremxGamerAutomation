@@ -64,6 +64,22 @@
             color: #888;
             margin-top: 4px;
         }
+        .token-lock-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .token-lock-box button {
+            width: 130px;
+            margin-top: 5px;
+            padding: 10px;
+            background: #444;
+            color: #fff;
+            font-size: 13px;
+        }
+        .token-lock-box button:hover {
+            background: #555;
+        }
     </style>
 </head>
 <body>
@@ -73,8 +89,11 @@
     
     <form id="workflowForm" onsubmit="triggerWorkflow(event)">
         <label for="github_token">GitHub Personal Access Token:</label>
-        <input type="password" id="github_token" required placeholder="Apna token yahan daalein">
-        <div class="info">Token ko browser localStorage me save kar liya jayega.</div>
+        <div class="token-lock-box">
+            <input type="password" id="github_token" required placeholder="Apna token yahan daalein">
+            <button type="button" onclick="toggleTokenLock()" id="lockBtn">Lock Token</button>
+        </div>
+        <div class="info">Token ko permanent fix/save rakhne ke liye 'Lock Token' dabayein.</div>
 
         <label for="video_url">Video URL / API Link:</label>
         <input type="text" id="video_url" required placeholder="Paste video link here">
@@ -134,16 +153,59 @@
 
 <script>
     window.addEventListener('DOMContentLoaded', () => {
+        const tokenInput = document.getElementById('github_token');
+        const lockBtn = document.getElementById('lockBtn');
+        
         const savedToken = localStorage.getItem('prem_gh_token');
+        const isLocked = localStorage.getItem('prem_token_locked') === 'true';
+
         if (savedToken) {
-            document.getElementById('github_token').value = savedToken;
+            tokenInput.value = savedToken;
+        }
+
+        if (isLocked && savedToken) {
+            tokenInput.type = 'password';
+            tokenInput.disabled = true;
+            lockBtn.textContent = 'Unlock Token';
+            lockBtn.style.background = '#ff4444';
         }
     });
+
+    function toggleTokenLock() {
+        const tokenInput = document.getElementById('github_token');
+        const lockBtn = document.getElementById('lockBtn');
+        const tokenVal = tokenInput.value.trim();
+
+        if (!tokenVal) {
+            alert('Pehle token enter karein!');
+            return;
+        }
+
+        const isLocked = localStorage.getItem('prem_token_locked') === 'true';
+
+        if (!isLocked) {
+            // Lock it
+            localStorage.setItem('prem_gh_token', tokenVal);
+            localStorage.setItem('prem_token_locked', 'true');
+            tokenInput.disabled = true;
+            lockBtn.textContent = 'Unlock Token';
+            lockBtn.style.background = '#ff4444';
+            alert('Token permanently fix/lock ho gaya hai!');
+        } else {
+            // Unlock it
+            localStorage.setItem('prem_token_locked', 'false');
+            tokenInput.disabled = false;
+            lockBtn.textContent = 'Lock Token';
+            lockBtn.style.background = '#444';
+            alert('Token unlock ho gaya hai, ab aap change kar sakte hain.');
+        }
+    }
 
     async function triggerWorkflow(event) {
         event.preventDefault();
 
-        const token = document.getElementById('github_token').value.trim();
+        const tokenInput = document.getElementById('github_token');
+        const token = tokenInput.value.trim();
         const videoUrl = document.getElementById('video_url').value;
         const videoTitle = document.getElementById('video_title').value;
         const gameName = document.getElementById('game_name').value;
@@ -196,9 +258,6 @@
                 alert('Failed: ' + (errData.message || 'Check console'));
                 console.error(errData);
             }
-        } else {
-            // caught exception handle
-        }
         } catch (error) {
             alert('Error connecting to GitHub API. Check console.');
             console.error(error);
